@@ -23,16 +23,20 @@ bot.on('ready', () => {
     for(c in channel_data){
         bot.channels.fetch(channel_data[c].id).then(channel => {
             channels.push(channel);
+            console.log("Got channel:"+channel.name);
         }).catch(console.error);
     }
-    console.log("Finished initialisation.");
 });
 
 bot.on('message', msg => {
     switch(msg.content){
         case '!_Add':
-            channels.push(msg.channel);
-            console.log("Added new channel: " + msg.channel.name);
+            if(channels.includes(msg.channel)){
+                console.warn("Already in channel: " + msg.channel.name);
+            }else{
+                channels.push(msg.channel);
+                console.log("Added new channel: " + msg.channel.name);
+            }
             break;
         case '!_Remove':
             let found = false;
@@ -68,16 +72,15 @@ function postSecret(){
 }
 
 // Grab secrets using API
-setInterval(() => {
+function grabPosts(){
     let user = auth.db_user;
     let pass = auth.db_pass;
-    let auth = "Basic " + new Buffer(user + ":" + pass).toString("base64");
+    let authorization = "Basic " + new Buffer(user + ":" + pass).toString("base64");
     console.log("Started API call");
     request({ 'url' : auth.url, 'headers' : {
-        "Authorization" : auth
-    }, 'json' : true}, (err, resp, body) => {
-        console.error(err);
-        secrets = body;
+        "Authorization" : authorization
+    }}, (err, resp, body) => {
+        secrets = JSON.parse(body);
         while(true){
             if(secrets.length == 0){
                 break;
@@ -88,10 +91,13 @@ setInterval(() => {
                 break;
             }
         }
-    })
-    let interval = API_call_timeout/(secrets.length + 1);
-    setInterval(() => {postSecret()},interval);
-},API_call_timeout);
+        let interval = API_call_timeout/(secrets.length + 1);
+        postSecret();
+        setInterval(() => {postSecret()},interval);
+    });
+}
+grabPosts();
+setInterval(grabPosts,API_call_timeout);
 
 // Save active channels
 setInterval(() => {
