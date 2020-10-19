@@ -64,9 +64,17 @@ function postSecret(){
     }
     let s = secrets[secrets.length - 1];
     secret_num = s.imperialSecretNumber;
-    console.log("Posting Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret);
-    for(c in channels){
-        channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret);
+    console.log("Posting Secret:" + s.imperialSecretNumber);
+    if(s.hasOwnProperty('image')){
+        let imageBuffer = new Buffer(s.image,'base64');
+        let attachment = new discord.Attachment(imageBuffer);
+        for(c in channels){
+            channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret),attachment;
+        }
+    }else{
+        for(c in channels){
+            channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret);
+        }
     }
     secrets.pop();
 }
