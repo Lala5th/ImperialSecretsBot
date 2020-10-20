@@ -67,9 +67,14 @@ function postSecret(){
     console.log("Posting Secret:" + s.imperialSecretNumber);
     if(s.hasOwnProperty('image')){
         let imageBuffer = new Buffer(s.image,'base64');
-        let attachment = new Discord.Attachment(imageBuffer);
+        let attachment = new Discord.MessageAttachment(imageBuffer);
         for(c in channels){
-            channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret),attachment;
+            channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret,{
+                'files' : [{
+                    'attachment' : ,
+                    'name' : 'secret.jpg'
+                }]
+            });
         }
     }else{
         for(c in channels){
