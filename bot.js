@@ -71,7 +71,7 @@ function postSecret(){
         for(c in channels){
             channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret,{
                 'files' : [{
-                    'attachment' : ,
+                    'attachment' : attachment,
                     'name' : 'secret.jpg'
                 }]
             });
