@@ -65,21 +65,29 @@ function postSecret(){
     let s = secrets[secrets.length - 1];
     secret_num = s.imperialSecretNumber;
     console.log("Posting Secret:" + s.imperialSecretNumber);
+    let embed = new Discord.MessageEmbed().setTitle("Imperial Secret #" + s.imperialSecretNumber);
+    let hdr = '';
+    if(s.hasOwnProperty('year')){
+        hdr += s.year;
+    }
+    if(s.hasOwnProperty("course")){
+        hdr += s.course;
+    }
+    if(hdr != ''){
+        hdr = '[' + hdr + ']';
+    }
+    embed.setAuthor(hdr);
+    if(s.hasOwnProperty('responseToSecret')){
+        embed.addField('Responding to', 'Secret #' + s.responseToSecret, true);
+    }
+    embed.addField('Secret:', s.mainSecret);
     if(s.hasOwnProperty('image')){
-        let imageBuffer = new Buffer(s.image,'base64');
+        let imageBuffer = new Buffer.from(s.image,'base64');
         let attachment = new Discord.MessageAttachment(imageBuffer);
-        for(c in channels){
-            channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret,{
-                'files' : [{
-                    'attachment' : attachment,
-                    'name' : 'secret.jpg'
-                }]
-            });
-        }
-    }else{
-        for(c in channels){
-            channels[c].send("Imperial Secret:" + s.imperialSecretNumber + "\n" + s.prettifiedSecret);
-        }
+        embed.attachFiles([attachment]);
+    }
+    for(c in channels){
+        channels[c].send(embed);
     }
     secrets.pop();
 }
@@ -88,7 +96,7 @@ function postSecret(){
 function grabPosts(){
     let user = auth.db_user;
     let pass = auth.db_pass;
-    let authorization = "Basic " + new Buffer(user + ":" + pass).toString("base64");
+    let authorization = "Basic " + new Buffer.from(user + ":" + pass).toString("base64");
     console.log("Started API call");
     request({ 'url' : auth.url, 'headers' : {
         "Authorization" : authorization
