@@ -71,6 +71,9 @@ function postSecret(){
         hdr += s.year;
     }
     if(s.hasOwnProperty("course")){
+        if(hdr != ''){
+            hdr += ' ';
+        }
         hdr += s.course;
     }
     if(hdr != ''){
