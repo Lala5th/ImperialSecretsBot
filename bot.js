@@ -95,8 +95,12 @@ function postSecret(){
     secrets.pop();
 }
 
+var posting_interval = '';
 // Grab secrets using API
 function grabPosts(){
+    if(posting_interval != ''){
+        clearInterval(posting_interval);
+    }
     let user = auth.db_user;
     let pass = auth.db_pass;
     let authorization = "Basic " + new Buffer.from(user + ":" + pass).toString("base64");
@@ -117,8 +121,8 @@ function grabPosts(){
         }
         let interval = API_call_timeout/(secrets.length + 1);
         console.log("Got  " + secrets.length + ' new secrets');
-        //postSecret();
-        setInterval(postSecret,interval);
+        postSecret();
+        posting_interval = setInterval(postSecret,interval);
     });
 }
 grabPosts();
