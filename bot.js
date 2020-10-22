@@ -116,8 +116,8 @@ function grabPosts(){
             }
         }
         let interval = API_call_timeout/(secrets.length + 1);
-        console.log("Interval set to: " + interval + 'ms');
-        postSecret();
+        console.log("Got  " + secrets,length + ' new secrets');
+        //postSecret();
         setInterval(postSecret,interval);
     });
 }
