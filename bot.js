@@ -65,32 +65,47 @@ function postSecret(){
     let s = secrets[secrets.length - 1];
     secret_num = s.imperialSecretNumber;
     console.log("Posting Secret:" + s.imperialSecretNumber);
-    let embed = new Discord.MessageEmbed().setTitle("Imperial Secret #" + s.imperialSecretNumber);
-    let hdr = '';
-    if(s.hasOwnProperty('year')){
-        hdr += s.year;
-    }
-    if(s.hasOwnProperty("course")){
-        if(hdr != ''){
-            hdr += ' ';
+    let embed = new Discord.MessageEmbed();
+    if(s.mainSecret.length < 1024){
+        embed.setTitle("Imperial Secret #" + s.imperialSecretNumber);
+        let hdr = '';
+        if(s.hasOwnProperty('year')){
+            hdr += s.year;
         }
-        hdr += s.course;
-    }
-    if(hdr != ''){
-        hdr = '[' + hdr + ']';
-    }
-    embed.setAuthor(hdr);
-    if(s.hasOwnProperty('responseToSecret')){
-        embed.addField('Responding to', 'Secret #' + s.responseToSecret, true);
-    }
-    embed.addField('Secret:', s.mainSecret);
-    if(s.hasOwnProperty('image')){
-        let imageBuffer = new Buffer.from(s.image,'base64');
-        let attachment = new Discord.MessageAttachment(imageBuffer);
-        embed.attachFiles([attachment]);
-    }
-    for(c in channels){
-        channels[c].send(embed);
+        if(s.hasOwnProperty("course")){
+            if(hdr != ''){
+                hdr += ' ';
+            }
+            hdr += s.course;
+        }
+        if(hdr != ''){
+            hdr = '[' + hdr + ']';
+        }
+        embed.setAuthor(hdr);
+        if(s.hasOwnProperty('responseToSecret')){
+            embed.addField('Responding to', 'Secret #' + s.responseToSecret, true);
+        }
+        embed.addField('Secret:', s.mainSecret);
+        if(s.hasOwnProperty('image')){
+            let imageBuffer = new Buffer.from(s.image,'base64');
+            let attachment = new Discord.MessageAttachment(imageBuffer);
+            embed.attachFiles([attachment]);
+        }
+        for(c in channels){
+            channels[c].send(embed);
+        }
+    }else{
+        for(c in channels){
+            channels[c].send(s.prettifiedSecret);
+            if(s.hasOwnProperty('image')){
+                let imageBuffer = new Buffer.from(s.image,'base64');
+                let attachment = new Discord.MessageAttachment(imageBuffer);
+                embed.attachFiles([attachment]);
+                for(c in channels){
+                    channels[c].send(embed);
+                }
+            }
+        }
     }
     secrets.pop();
 }
