@@ -96,7 +96,7 @@ function postSecret(){
         }
     }else{
         for(c in channels){
-            channels[c].send(s.prettifiedSecret);
+            channels[c].send('Secret:' + s.imperialSecretNumber +'\n\n' + s.prettifiedSecret);
             if(s.hasOwnProperty('image')){
                 let imageBuffer = new Buffer.from(s.image,'base64');
                 let attachment = new Discord.MessageAttachment(imageBuffer);
