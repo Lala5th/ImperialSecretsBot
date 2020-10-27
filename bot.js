@@ -123,7 +123,14 @@ function grabPosts(){
     request({ 'url' : auth.url, 'headers' : {
         "Authorization" : authorization
     }}, (err, resp, body) => {
-        secrets = JSON.parse(body);
+        try{
+            secrets = JSON.parse(body);
+        }catch(e){
+            console.error(e);
+            if (e instanceof SyntaxError){
+                console.error("Attempted to parse:\n" + body);
+            }
+        }
         while(true){
             if(secrets.length == 0){
                 break;
