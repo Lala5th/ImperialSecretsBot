@@ -83,9 +83,14 @@ function postSecret(){
         }
         embed.setAuthor(hdr);
         if(s.hasOwnProperty('responseToSecret')){
-            embed.addField('Responding to', 'Secret #' + s.responseToSecret, true);
+            embed.addField('Responding to:', 'Secret #' + s.responseToSecret, true);
         }
         embed.addField('Secret:', s.mainSecret);
+        if(s.hasOwnProperty('poll')){
+            for(p in s.poll){
+                embed.addField('Option ' + (p+1), s.poll[i], true);
+            }
+        }
         if(s.hasOwnProperty('image')){
             let imageBuffer = new Buffer.from(s.image,'base64');
             let attachment = new Discord.MessageAttachment(imageBuffer);
