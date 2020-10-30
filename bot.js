@@ -88,7 +88,7 @@ function postSecret(){
         embed.addField('Secret:', s.mainSecret);
         if(s.hasOwnProperty('poll')){
             for(p in s.poll){
-                let i = p+1
+                let i = parseInt(p)+1
                 embed.addField('Option ' + i, s.poll[p], true);
             }
         }
