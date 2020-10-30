@@ -88,7 +88,7 @@ function postSecret(){
         embed.addField('Secret:', s.mainSecret);
         if(s.hasOwnProperty('poll')){
             for(p in s.poll){
-                embed.addField('Option ' + (p+1), s.poll[i], true);
+                embed.addField('Option ' + (p+1), s.poll[p], true);
             }
         }
         if(s.hasOwnProperty('image')){
