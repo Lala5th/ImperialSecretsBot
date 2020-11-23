@@ -85,7 +85,9 @@ function postSecret(){
         if(s.hasOwnProperty('responseToSecret')){
             embed.addField('Responding to:', 'Secret #' + s.responseToSecret, true);
         }
-        embed.addField('Secret:', s.mainSecret);
+        if(s.hasOwnProperty('mainSecret')){
+            embed.addField('Secret:', s.mainSecret);
+        }
         if(s.hasOwnProperty('poll')){
             for(p in s.poll){
                 let i = parseInt(p)+1
